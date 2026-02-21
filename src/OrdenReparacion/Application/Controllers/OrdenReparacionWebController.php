@@ -36,7 +36,7 @@ class OrdenReparacionWebController extends Controller
     public function create(): Response
     {
         $clientes = ClienteEloquentModel::with('user')->orderBy('razon_social')->get();
-        $tecnicos = TecnicoEloquentModel::with('user')->where('activo', true)->get();
+        $tecnicos = TecnicoEloquentModel::with('user')->where('activo', true)->orderBy('created_at')->get();
 
         return Inertia::render('OrdenesReparacion/Create', [
             'clientes' => ClienteResource::collection($clientes),

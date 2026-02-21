@@ -4,6 +4,7 @@ import { router } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
+import { useToast } from '../../composables/nuxt-compat'
 
 interface Cliente { id: string; razonSocial: string; numeroDocumento: string }
 interface Tecnico { id: string; nombreCompleto: string; especialidad: string }
@@ -30,7 +31,7 @@ type Schema = z.output<typeof schema>
 const state = ref<Partial<Schema>>({
   clienteId: '',
   equipoId: '',
-  tecnicoId: '',
+  tecnicoId: undefined,
   problemaReportado: '',
   costoEstimado: undefined,
   observaciones: ''
@@ -40,20 +41,21 @@ const loading = ref(false)
 const equiposCliente = ref<Equipo[]>([])
 
 const clienteOptions = computed(() =>
-  props.clientes.data.map(c => ({ label: `${c.razonSocial} - ${c.numeroDocumento}`, value: c.id }))
+  props.clientes.data.map(c => ({ label: c.razonSocial, value: c.id }))
 )
 
 const tecnicoOptions = computed(() =>
-  [{ label: 'Sin asignar', value: '' }, ...props.tecnicos.data.map(t => ({ label: `${t.nombreCompleto} - ${t.especialidad}`, value: t.id }))]
+  props.tecnicos.data.map((t: Tecnico) => ({ label: t.nombreCompleto, value: t.id }))
 )
 
 const equipoOptions = computed(() =>
-  equiposCliente.value.map(e => ({ label: `${e.marca} ${e.modelo} - IMEI: ${e.imei}`, value: e.id }))
+  equiposCliente.value.map(e => ({ label: `${e.marca} ${e.modelo}`, value: e.id }))
 )
 
 watch(() => state.value.clienteId, async (clienteId) => {
   if (clienteId) {
-    const response = await fetch(route('api.equipos.por-cliente', clienteId), {
+    const actualId = typeof clienteId === 'object' ? (clienteId as any).value ?? (clienteId as any).id : clienteId
+    const response = await fetch(route('api.equipos.por-cliente', actualId), {
       headers: { 'Accept': 'application/json' },
       credentials: 'include'
     })
@@ -70,7 +72,7 @@ watch(() => state.value.clienteId, async (clienteId) => {
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true
 
-  router.post(route('ordenes-reparacion.store'), event.data, {
+  router.post(route('ordenes-reparacion.store'), { ...event.data }, {
     onSuccess: () => {
       toast.add({ title: 'Orden creada correctamente', color: 'success' })
     },

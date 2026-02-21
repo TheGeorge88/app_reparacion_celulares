@@ -35,6 +35,12 @@ const state = ref<Partial<Schema>>({
   activo: true
 })
 
+const marcas = [
+  'Apple', 'Samsung', 'Xiaomi', 'OPPO', 'Vivo', 'HONOR', 'Motorola',
+  'Huawei', 'OnePlus', 'Realme', 'Google (Pixel)', 'Sony', 'ASUS',
+  'Nokia', 'Tecno', 'Infinix', 'ZTE', 'Lenovo'
+]
+
 const loading = ref(false)
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -83,7 +89,7 @@ const goBack = () => router.visit(route('repuestos.index'))
             </UFormField>
 
             <UFormField label="Marca" name="marca" size="xl" class="w-full">
-              <UInput v-model="state.marca" placeholder="Samsung, iPhone..." size="xl" class="w-full" />
+              <USelectMenu v-model="state.marca" :items="marcas" placeholder="Seleccionar marca..." size="xl" class="w-full" />
             </UFormField>
 
             <UFormField label="Modelo compatible" name="modelo" size="xl" class="w-full">

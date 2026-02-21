@@ -15,10 +15,12 @@ class StoreOrdenReparacionRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $extractValue = fn($val) => is_array($val) ? ($val['value'] ?? $val['id'] ?? null) : $val;
+
         $this->merge([
-            'cliente_id' => $this->clienteId ?? $this->cliente_id,
-            'equipo_id' => $this->equipoId ?? $this->equipo_id,
-            'tecnico_id' => $this->tecnicoId ?? $this->tecnico_id,
+            'cliente_id' => $extractValue($this->clienteId ?? $this->cliente_id),
+            'equipo_id' => $extractValue($this->equipoId ?? $this->equipo_id),
+            'tecnico_id' => $extractValue($this->tecnicoId ?? $this->tecnico_id),
             'problema_reportado' => $this->problemaReportado ?? $this->problema_reportado,
             'costo_estimado' => $this->costoEstimado ?? $this->costo_estimado,
             'observaciones' => $this->observaciones,

@@ -18,7 +18,8 @@ class UpdateEquipoRequest extends FormRequest
         $data = [];
 
         if ($this->has('clienteId') || $this->has('cliente_id')) {
-            $data['cliente_id'] = $this->clienteId ?? $this->cliente_id;
+            $clienteId = $this->clienteId ?? $this->cliente_id;
+            $data['cliente_id'] = is_array($clienteId) ? ($clienteId['value'] ?? $clienteId['id'] ?? null) : $clienteId;
         }
         if ($this->has('marca')) $data['marca'] = $this->marca;
         if ($this->has('modelo')) $data['modelo'] = $this->modelo;

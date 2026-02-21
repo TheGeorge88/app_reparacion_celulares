@@ -15,8 +15,13 @@ class StoreEquipoRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $clienteId = $this->clienteId ?? $this->cliente_id;
+        if (is_array($clienteId)) {
+            $clienteId = $clienteId['value'] ?? $clienteId['id'] ?? null;
+        }
+
         $this->merge([
-            'cliente_id' => $this->clienteId ?? $this->cliente_id,
+            'cliente_id' => $clienteId,
             'marca' => $this->marca,
             'modelo' => $this->modelo,
             'imei' => $this->imei,
@@ -31,8 +36,8 @@ class StoreEquipoRequest extends FormRequest
             'cliente_id' => 'required|uuid|exists:clientes,id',
             'marca' => 'required|string|max:100',
             'modelo' => 'required|string|max:100',
-            'imei' => 'required|string|max:20|unique:equipos,imei',
-            'color' => 'required|string|max:50',
+            'imei' => 'nullable|string|max:20|unique:equipos,imei',
+            'color' => 'nullable|string|max:50',
             'observaciones' => 'nullable|string',
         ];
     }

@@ -11,8 +11,6 @@ const open = ref(false)
 const appConfig = useAppConfig()
 
 onMounted(() => {
-  console.log('Layout mounted with colors:', appConfig.value.ui.colors)
-  // Initialize flash messages
   useFlash()
 })
 

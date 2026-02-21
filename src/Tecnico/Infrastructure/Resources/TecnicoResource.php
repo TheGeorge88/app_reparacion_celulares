@@ -14,6 +14,7 @@ class TecnicoResource extends JsonResource
         return [
             'id' => $this->id,
             'userId' => $this->user_id,
+            'nombreCompleto' => $this->user?->name,
             'usuario' => $this->user?->name,
             'email' => $this->user?->email,
             'especialidad' => $this->especialidad,

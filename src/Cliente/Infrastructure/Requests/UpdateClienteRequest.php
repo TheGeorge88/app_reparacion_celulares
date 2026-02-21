@@ -15,20 +15,21 @@ class UpdateClienteRequest extends FormRequest
     {
         $data = [];
 
-        if ($this->has('userId')) {
-            $data['user_id'] = $this->userId;
+        if ($this->has('userId') || $this->has('user_id')) {
+            $userId = $this->userId ?? $this->user_id;
+            $data['user_id'] = is_array($userId) ? ($userId['value'] ?? $userId['id'] ?? null) : $userId;
         }
 
-        if ($this->has('tipoDocumento')) {
-            $data['tipo_documento'] = $this->tipoDocumento;
+        if ($this->has('tipoDocumento') || $this->has('tipo_documento')) {
+            $data['tipo_documento'] = $this->tipoDocumento ?? $this->tipo_documento;
         }
 
-        if ($this->has('numeroDocumento')) {
-            $data['numero_documento'] = $this->numeroDocumento;
+        if ($this->has('numeroDocumento') || $this->has('numero_documento')) {
+            $data['numero_documento'] = $this->numeroDocumento ?? $this->numero_documento;
         }
 
-        if ($this->has('razonSocial')) {
-            $data['razon_social'] = $this->razonSocial;
+        if ($this->has('razonSocial') || $this->has('razon_social')) {
+            $data['razon_social'] = $this->razonSocial ?? $this->razon_social;
         }
 
         $this->merge($data);

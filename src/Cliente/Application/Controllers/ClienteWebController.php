@@ -20,20 +20,7 @@ class ClienteWebController extends Controller
         $clientes = ClienteEloquentModel::with('user')->orderBy('created_at', 'desc')->get();
 
         return Inertia::render('Cliente/index', [
-            'customers' => [
-                'data' => ClienteResource::collection($clientes),
-                'links' => [],
-                'meta' => [
-                    'total' => $clientes->count(),
-                    'per_page' => $clientes->count(),
-                    'current_page' => 1,
-                ]
-            ],
-            'stats' => [
-                'total' => $clientes->count(),
-                'active' => $clientes->count(),
-                'inactive' => 0,
-            ],
+            'customers' => ClienteResource::collection($clientes),
         ]);
     }
 

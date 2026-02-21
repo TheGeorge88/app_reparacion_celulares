@@ -14,9 +14,14 @@ class StoreProductoRequest extends FormRequest
     protected function prepareForValidation()
     {
         // Convert camelCase to snake_case for validation
+        $categoriaId = $this->categoriaId ?? $this->categoria_id;
+        if (is_array($categoriaId)) {
+            $categoriaId = $categoriaId['value'] ?? $categoriaId['id'] ?? null;
+        }
+
         $this->merge([
-            'categoria_id' => $this->categoriaId,
-            'precio_unitario' => $this->precioUnitario,
+            'categoria_id' => $categoriaId,
+            'precio_unitario' => $this->precioUnitario ?? $this->precio_unitario,
         ]);
     }
 

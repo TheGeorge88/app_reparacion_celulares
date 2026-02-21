@@ -21,6 +21,20 @@ const state = ref<Partial<Schema>>({
   activo: true
 })
 
+const categoriasPredefinidas = [
+  'Pantalla LCD',
+  'Pantalla LED',
+  'Pantalla AMOLED',
+  'Batería',
+  'Puerto de carga',
+  'Cámara trasera',
+  'Cámara frontal',
+  'Parlante / Altavoz',
+  'Micrófono',
+  'Pin de carga',
+  'Tapa trasera'
+]
+
 const loading = ref(false)
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -60,7 +74,7 @@ const goBack = () => router.visit(route('categorias.index'))
 
         <UForm :schema="schema" :state="state" class="space-y-6 max-w-2xl" @submit="onSubmit">
           <UFormField label="Nombre" name="nombre" size="xl" class="w-full">
-            <UInput v-model="state.nombre" placeholder="Ej: Pantallas, Baterias..." size="xl" class="w-full" />
+            <USelectMenu v-model="state.nombre" :items="categoriasPredefinidas" placeholder="Seleccionar categoria..." size="xl" class="w-full" />
           </UFormField>
 
           <UFormField label="Descripcion" name="descripcion" size="xl" class="w-full">

@@ -18,7 +18,8 @@ class UpdateTecnicoRequest extends FormRequest
         $data = [];
 
         if ($this->has('userId') || $this->has('user_id')) {
-            $data['user_id'] = $this->userId ?? $this->user_id;
+            $userId = $this->userId ?? $this->user_id;
+            $data['user_id'] = is_array($userId) ? ($userId['value'] ?? $userId['id'] ?? null) : $userId;
         }
         if ($this->has('especialidad')) $data['especialidad'] = $this->especialidad;
         if ($this->has('certificacion')) $data['certificacion'] = $this->certificacion;

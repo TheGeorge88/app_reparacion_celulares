@@ -38,6 +38,14 @@ const errors = computed(() => {
 
 const isLoading = ref(false)
 
+const marcas = [
+  'Apple', 'Samsung', 'Xiaomi', 'OPPO', 'Vivo', 'HONOR', 'Motorola',
+  'Huawei', 'OnePlus', 'Realme', 'Google (Pixel)', 'Sony', 'ASUS',
+  'Nokia', 'Tecno', 'Infinix', 'ZTE', 'Lenovo'
+]
+
+const colores = ['Negro', 'Blanco', 'Azul', 'Rojo', 'Dorado', 'Plateado', 'Verde', 'Morado', 'Gris']
+
 const clienteOptions = computed(() =>
   props.clientes.data.map(c => ({ label: `${c.razonSocial} - ${c.numeroDocumento}`, value: c.id }))
 )
@@ -45,7 +53,7 @@ const clienteOptions = computed(() =>
 const handleSubmit = () => {
   isLoading.value = true
 
-  router.put(route('equipos.update', props.equipo.id), state, {
+  router.put(route('equipos.update', props.equipo.id), { ...state }, {
     onFinish: () => { isLoading.value = false },
     onError: () => { isLoading.value = false }
   })
@@ -72,13 +80,20 @@ const goBack = () => router.visit(route('equipos.index'))
         </div>
 
         <form @submit.prevent="handleSubmit" class="space-y-6 max-w-2xl">
-          <FormField label="Cliente" name="clienteId" required :error="errors.cliente_id">
+          <div v-if="Object.keys(errors).length" class="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            <p class="font-semibold mb-1">Por favor corrija los siguientes errores:</p>
+            <ul class="list-disc list-inside">
+              <li v-for="(error, key) in errors" :key="key">{{ error }}</li>
+            </ul>
+          </div>
+
+          <FormField label="Cliente" name="clienteId" required :error="errors.clienteId || errors.cliente_id">
             <USelectMenu v-model="state.clienteId" :items="clienteOptions" value-key="value" placeholder="Seleccione un cliente" size="xl" class="w-full" />
           </FormField>
 
           <div class="grid grid-cols-2 gap-8">
             <FormField label="Marca" name="marca" required :error="errors.marca">
-              <UInput v-model="state.marca" icon="i-lucide-smartphone" size="xl" class="w-full" />
+              <USelectMenu v-model="state.marca" :items="marcas" placeholder="Seleccionar marca..." size="xl" class="w-full" />
             </FormField>
 
             <FormField label="Modelo" name="modelo" required :error="errors.modelo">
@@ -92,7 +107,7 @@ const goBack = () => router.visit(route('equipos.index'))
             </FormField>
 
             <FormField label="Color" name="color" required :error="errors.color">
-              <UInput v-model="state.color" icon="i-lucide-palette" size="xl" class="w-full" />
+              <USelectMenu v-model="state.color" :items="colores" placeholder="Seleccionar color..." size="xl" class="w-full" />
             </FormField>
           </div>
 

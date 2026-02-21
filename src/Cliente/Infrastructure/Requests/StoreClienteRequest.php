@@ -13,22 +13,27 @@ class StoreClienteRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        $userId = $this->userId ?? $this->user_id;
+        if (is_array($userId)) {
+            $userId = $userId['value'] ?? $userId['id'] ?? null;
+        }
+
         $this->merge([
-            'user_id' => $this->userId,
-            'tipo_documento' => $this->tipoDocumento,
-            'numero_documento' => $this->numeroDocumento,
-            'razon_social' => $this->razonSocial,
+            'user_id' => $userId,
+            'tipo_documento' => $this->tipoDocumento ?? $this->tipo_documento,
+            'numero_documento' => $this->numeroDocumento ?? $this->numero_documento,
+            'razon_social' => $this->razonSocial ?? $this->razon_social,
         ]);
     }
 
     public function rules(): array
     {
         return [
-            'user_id' => 'required|uuid|exists:users,id|unique:clientes,user_id',
-            'tipo_documento' => 'required|string|in:DNI,RUC,CE,PASAPORTE',
-            'numero_documento' => 'required|string|unique:clientes,numero_documento',
+            'user_id' => 'nullable|uuid|exists:users,id|unique:clientes,user_id',
+            'tipo_documento' => 'nullable|string|in:DNI,RUC,CE,PASAPORTE',
+            'numero_documento' => 'nullable|string|unique:clientes,numero_documento',
             'razon_social' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
+            'direccion' => 'nullable|string|max:255',
         ];
     }
 

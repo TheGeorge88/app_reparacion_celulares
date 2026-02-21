@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { watchEffect } from 'vue'
-
 interface Props {
   label?: string
   name: string
@@ -9,13 +7,7 @@ interface Props {
   hint?: string
 }
 
-const props = defineProps<Props>()
-
-watchEffect(() => {
-  if (props.error) {
-    console.log(`FormField ${props.name} tiene error:`, props.error)
-  }
-})
+defineProps<Props>()
 </script>
 
 <template>

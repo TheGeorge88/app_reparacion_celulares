@@ -18,7 +18,8 @@ class UpdateOrdenReparacionRequest extends FormRequest
         $data = [];
 
         if ($this->has('tecnicoId') || $this->has('tecnico_id')) {
-            $data['tecnico_id'] = $this->tecnicoId ?? $this->tecnico_id;
+            $tecnicoId = $this->tecnicoId ?? $this->tecnico_id;
+            $data['tecnico_id'] = is_array($tecnicoId) ? ($tecnicoId['value'] ?? $tecnicoId['id'] ?? null) : $tecnicoId;
         }
         if ($this->has('problemaReportado') || $this->has('problema_reportado')) {
             $data['problema_reportado'] = $this->problemaReportado ?? $this->problema_reportado;

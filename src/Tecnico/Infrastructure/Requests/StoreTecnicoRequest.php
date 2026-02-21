@@ -15,8 +15,13 @@ class StoreTecnicoRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $userId = $this->userId ?? $this->user_id;
+        if (is_array($userId)) {
+            $userId = $userId['value'] ?? $userId['id'] ?? null;
+        }
+
         $this->merge([
-            'user_id' => $this->userId ?? $this->user_id,
+            'user_id' => $userId,
             'especialidad' => $this->especialidad,
             'certificacion' => $this->certificacion,
             'fecha_contratacion' => $this->fechaContratacion ?? $this->fecha_contratacion,

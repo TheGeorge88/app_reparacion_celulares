@@ -54,7 +54,7 @@ const updateCSSVariables = (primary: string, neutral: string) => {
     )
   }
 
-  console.log(`✓ CSS variables updated: primary=${primary}-${primaryShade}, neutral=${neutral}`)
+
 }
 
 // Global reactive app config
@@ -70,7 +70,7 @@ watch(() => appConfig.value.ui.colors, (newColors) => {
     localStorage.setItem('nuxt-ui-primary-color', newColors.primary)
     localStorage.setItem('nuxt-ui-neutral-color', newColors.neutral)
     updateCSSVariables(newColors.primary, newColors.neutral)
-    console.log('Color theme changed to:', newColors.primary, '/', newColors.neutral)
+
   }
 }, { deep: true })
 

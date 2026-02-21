@@ -14,12 +14,14 @@ class StoreFacturaRequest extends FormRequest
     protected function prepareForValidation()
     {
         // Convert camelCase to snake_case for validation
+        $extractValue = fn($val) => is_array($val) ? ($val['value'] ?? $val['id'] ?? null) : $val;
+
         $this->merge([
-            'numero_factura' => $this->numeroFactura,
-            'cliente_id' => $this->clienteId,
-            'usuario_id' => $this->usuarioId,
-            'fecha_emision' => $this->fechaEmision,
-            'fecha_vencimiento' => $this->fechaVencimiento,
+            'numero_factura' => $this->numeroFactura ?? $this->numero_factura,
+            'cliente_id' => $extractValue($this->clienteId ?? $this->cliente_id),
+            'usuario_id' => $extractValue($this->usuarioId ?? $this->usuario_id),
+            'fecha_emision' => $this->fechaEmision ?? $this->fecha_emision,
+            'fecha_vencimiento' => $this->fechaVencimiento ?? $this->fecha_vencimiento,
         ]);
 
         // Convert detalles array from camelCase to snake_case

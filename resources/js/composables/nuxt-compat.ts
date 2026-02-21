@@ -110,7 +110,7 @@ export function useCookie(name: string) {
  */
 export function defineShortcuts(shortcuts: Record<string, () => void>) {
   // Placeholder - implement with @vueuse/core if needed
-  console.log('Keyboard shortcuts:', shortcuts)
+  // Placeholder - implement with @vueuse/core if needed
 }
 
 /**

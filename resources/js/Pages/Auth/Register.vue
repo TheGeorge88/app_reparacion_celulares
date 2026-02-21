@@ -42,9 +42,7 @@ const handleSubmit = () => {
     onFinish: () => {
       isLoading.value = false
     },
-    onError: (errors) => {
-      console.error('Errores de validación:', errors)
-    }
+    onError: () => {}
   })
 }
 </script>

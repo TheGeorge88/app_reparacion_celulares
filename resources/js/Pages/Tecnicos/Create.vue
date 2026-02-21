@@ -43,12 +43,11 @@ const usuarioOptions = computed(() =>
 const handleSubmit = () => {
   isLoading.value = true
 
-  router.post(route('tecnicos.store'), state, {
+  router.post(route('tecnicos.store'), { ...state }, {
     onFinish: () => {
       isLoading.value = false
     },
-    onError: (errors) => {
-      console.error('Errores de validacion:', errors)
+    onError: () => {
       isLoading.value = false
     }
   })
@@ -77,8 +76,16 @@ const handleCancel = () => {
         </div>
 
         <form @submit.prevent="handleSubmit" class="space-y-6 max-w-2xl">
+          <!-- Error general -->
+          <div v-if="Object.keys(errors).length" class="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            <p class="font-semibold mb-1">Por favor corrija los siguientes errores:</p>
+            <ul class="list-disc list-inside">
+              <li v-for="(error, key) in errors" :key="key">{{ error }}</li>
+            </ul>
+          </div>
+
           <!-- Usuario -->
-          <FormField label="Usuario" name="userId" required :error="errors.user_id">
+          <FormField label="Usuario" name="userId" required :error="errors.userId || errors.user_id">
             <USelectMenu
               v-model="state.userId"
               :items="usuarioOptions"
@@ -114,7 +121,7 @@ const handleCancel = () => {
 
           <!-- Fila 2: Fecha de Contratacion y Estado -->
           <div class="grid grid-cols-2 gap-8">
-            <FormField label="Fecha de Contratacion" name="fechaContratacion" :error="errors.fecha_contratacion">
+            <FormField label="Fecha de Contratacion" name="fechaContratacion" :error="errors.fechaContratacion || errors.fecha_contratacion">
               <UInput
                 v-model="state.fechaContratacion"
                 type="date"

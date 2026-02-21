@@ -36,19 +36,14 @@ const errors = computed(() => {
 
 const isLoading = ref(false)
 
-const usuarioOptions = computed(() =>
-  props.usuarios.map(u => ({ label: `${u.name} - ${u.email}`, value: u.id }))
-)
-
 const handleSubmit = () => {
   isLoading.value = true
 
-  router.post(route('clientes.store'), state, {
+  router.post(route('clientes.store'), { ...state }, {
     onFinish: () => {
       isLoading.value = false
     },
-    onError: (errors) => {
-      console.error('Errores de validacion:', errors)
+    onError: () => {
       isLoading.value = false
     }
   })
@@ -77,21 +72,28 @@ const handleCancel = () => {
         </div>
 
         <form @submit.prevent="handleSubmit" class="space-y-6 max-w-2xl">
-          <!-- Usuario -->
-          <FormField label="Usuario" name="userId" required :error="errors.user_id">
-            <USelectMenu
-              v-model="state.userId"
-              :items="usuarioOptions"
-              value-key="value"
-              placeholder="Seleccione un usuario..."
+          <!-- Error general -->
+          <div v-if="Object.keys(errors).length" class="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            <p class="font-semibold mb-1">Por favor corrija los siguientes errores:</p>
+            <ul class="list-disc list-inside">
+              <li v-for="(error, key) in errors" :key="key">{{ error }}</li>
+            </ul>
+          </div>
+
+          <!-- Nombre (obligatorio) -->
+          <FormField label="Nombre del Cliente" name="razonSocial" required :error="errors.razonSocial">
+            <UInput
+              v-model="state.razonSocial"
+              placeholder="Ingrese el nombre del cliente"
+              icon="i-lucide-user"
               size="xl"
               class="w-full"
             />
           </FormField>
 
-          <!-- Fila 1: Tipo y Numero de Documento -->
+          <!-- Fila 1: Tipo y Numero de Documento (opcional) -->
           <div class="grid grid-cols-2 gap-8">
-            <FormField label="Tipo de Documento" name="tipoDocumento" required :error="errors.tipoDocumento">
+            <FormField label="Tipo de Documento (opcional)" name="tipoDocumento" :error="errors.tipoDocumento">
               <USelect
                 v-model="state.tipoDocumento"
                 :items="[
@@ -100,16 +102,16 @@ const handleCancel = () => {
                   { label: 'CE', value: 'CE' },
                   { label: 'PASAPORTE', value: 'PASAPORTE' }
                 ]"
-                placeholder="Seleccione tipo de documento"
+                placeholder="Seleccione tipo"
                 size="xl"
                 class="w-full"
               />
             </FormField>
 
-            <FormField label="Numero de Documento" name="numeroDocumento" required :error="errors.numeroDocumento">
+            <FormField label="Numero de Documento (opcional)" name="numeroDocumento" :error="errors.numeroDocumento">
               <UInput
                 v-model="state.numeroDocumento"
-                placeholder="Ingrese el numero de documento"
+                placeholder="Ingrese el numero"
                 icon="i-lucide-credit-card"
                 size="xl"
                 class="w-full"
@@ -117,28 +119,16 @@ const handleCancel = () => {
             </FormField>
           </div>
 
-          <!-- Fila 2: Razon Social y Direccion -->
-          <div class="grid grid-cols-2 gap-8">
-            <FormField label="Razon Social" name="razonSocial" required :error="errors.razonSocial">
-              <UInput
-                v-model="state.razonSocial"
-                placeholder="Ingrese la razon social"
-                icon="i-lucide-building"
-                size="xl"
-                class="w-full"
-              />
-            </FormField>
-
-            <FormField label="Direccion" name="direccion" required :error="errors.direccion">
-              <UInput
-                v-model="state.direccion"
-                placeholder="Ingrese la direccion"
-                icon="i-lucide-map-pin"
-                size="xl"
-                class="w-full"
-              />
-            </FormField>
-          </div>
+          <!-- Direccion (opcional) -->
+          <FormField label="Direccion (opcional)" name="direccion" :error="errors.direccion">
+            <UInput
+              v-model="state.direccion"
+              placeholder="Ingrese la direccion"
+              icon="i-lucide-map-pin"
+              size="xl"
+              class="w-full"
+            />
+          </FormField>
 
           <!-- Botones -->
           <div class="flex justify-end gap-3 pt-4">
