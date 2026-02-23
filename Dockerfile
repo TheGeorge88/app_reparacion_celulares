@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: PHP + Apache
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Instalar extensiones necesarias para Laravel + PostgreSQL
 RUN apt-get update && apt-get install -y \
