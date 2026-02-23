@@ -37,7 +37,7 @@ COPY . .
 COPY --from=frontend /app/public/build public/build
 
 # Permisos de storage
-RUN mkdir -p storage/framework/{sessions,views,cache} \
+RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
